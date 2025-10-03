@@ -13,11 +13,11 @@ class EarnzyApp {
     }
 
     async init() {
+        // Set up event listeners first
+        this.setupEventListeners();
+        
         // Check authentication status
         await this.checkAuthStatus();
-        
-        // Set up event listeners
-        this.setupEventListeners();
         
         // Show welcome notification
         setTimeout(() => {
@@ -26,14 +26,19 @@ class EarnzyApp {
     }
 
     async checkAuthStatus() {
-        const user = await authFunctions.checkAuthStatus();
-        
-        if (user) {
-            this.currentUser = user;
-            document.getElementById('login-page').classList.remove('active');
-            document.getElementById('home-page').classList.add('active');
-            await this.loadUserData();
-        } else {
+        try {
+            const user = await authFunctions.checkAuthStatus();
+            
+            if (user) {
+                this.currentUser = user;
+                document.getElementById('login-page').classList.remove('active');
+                document.getElementById('home-page').classList.add('active');
+                await this.loadUserData();
+            } else {
+                this.showPage('login-page');
+            }
+        } catch (error) {
+            console.error('Auth check error:', error);
             this.showPage('login-page');
         }
     }
@@ -64,16 +69,22 @@ class EarnzyApp {
 
     updateUI() {
         // Update wallet balance
-        document.getElementById('wallet-amount').textContent = this.userWallet.balance + ' Coins';
+        document.getElementById('wallet-amount').textContent = this.userWallet.balance.toLocaleString() + ' Coins';
         
         // Update stats
-        document.getElementById('total-earned').textContent = this.userWallet.earned;
-        document.getElementById('total-withdrawn').textContent = this.userWallet.withdrawn;
+        document.getElementById('total-earned').textContent = this.userWallet.earned.toLocaleString();
+        document.getElementById('total-withdrawn').textContent = this.userWallet.withdrawn.toLocaleString();
         
         // Update referral code if available
         if (this.userWallet.referral_code) {
             document.getElementById('referral-code').value = this.userWallet.referral_code;
             document.getElementById('referral-link').value = `https://earnzy.com/ref/${this.userWallet.referral_code}`;
+        }
+
+        // Update profile info
+        if (this.currentUser && this.currentUser.email) {
+            document.getElementById('profile-email').textContent = this.currentUser.email;
+            document.getElementById('profile-name').textContent = this.currentUser.email.split('@')[0];
         }
     }
 
@@ -99,12 +110,28 @@ class EarnzyApp {
                 
                 // Update active nav item
                 document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-                document.querySelector(`.nav-item[data-page="${pageId}"]`).classList.add('active');
+                const navItem = document.querySelector(`.nav-item[data-page="${pageId}"]`);
+                if (navItem) navItem.classList.add('active');
             });
         });
         
         // Login Button
         document.getElementById('login-btn').addEventListener('click', () => this.handleLogin());
+        
+        // Signup Button
+        document.getElementById('signup-btn').addEventListener('click', () => this.handleSignup());
+        
+        // Show Signup Form
+        document.getElementById('show-register').addEventListener('click', (e) => {
+            e.preventDefault();
+            this.showSignupForm();
+        });
+
+        // Show Login Form
+        document.getElementById('show-login').addEventListener('click', (e) => {
+            e.preventDefault();
+            this.showLoginForm();
+        });
         
         // Google Login
         document.getElementById('google-login').addEventListener('click', () => this.handleGoogleLogin());
@@ -124,6 +151,9 @@ class EarnzyApp {
         // Copy Referral Code
         document.getElementById('copy-referral').addEventListener('click', () => this.copyReferralCode());
         
+        // Share Referral
+        document.getElementById('share-referral').addEventListener('click', () => this.shareReferral());
+        
         // Withdraw Button
         document.getElementById('withdraw-now-btn').addEventListener('click', () => this.handleWithdrawal());
         
@@ -132,11 +162,46 @@ class EarnzyApp {
             e.preventDefault();
             this.showNotification('Choose any earning method to start!');
         });
+
+        // Profile Icon
+        document.getElementById('profile-icon').addEventListener('click', (e) => {
+            e.preventDefault();
+            this.showPage('profile-page');
+        });
+
+        // Logout Button
+        document.getElementById('logout-btn').addEventListener('click', () => this.handleLogout());
+
+        // View More Tasks Button
+        document.getElementById('view-more-tasks').addEventListener('click', () => {
+            this.showNotification('More tasks coming soon!');
+        });
     }
 
     showPage(pageId) {
+        // Check if user is logged in for protected pages
+        const protectedPages = ['home-page', 'watch-page', 'tasks-page', 'scratch-page', 'referral-page', 'withdraw-page', 'profile-page'];
+        
+        if (protectedPages.includes(pageId) && !this.currentUser) {
+            this.showNotification('Please login first');
+            this.showPage('login-page');
+            return;
+        }
+
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
+    }
+
+    showLoginForm() {
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('signup-form').style.display = 'none';
+        document.getElementById('login-title').textContent = 'Login to Earnzy';
+    }
+
+    showSignupForm() {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('signup-form').style.display = 'block';
+        document.getElementById('login-title').textContent = 'Join Earnzy';
     }
 
     showLoading(show) {
@@ -162,7 +227,41 @@ class EarnzyApp {
             this.showNotification('Login successful!');
         } catch (error) {
             console.error('Login error:', error);
-            this.showNotification('Login failed. Please try again.');
+            this.showNotification('Login failed. Please check your credentials.');
+        } finally {
+            this.showLoading(false);
+        }
+    }
+
+    async handleSignup() {
+        const email = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
+        const confirmPassword = document.getElementById('signup-confirm-password').value;
+        
+        if (!email || !password) {
+            this.showNotification('Please enter email and password');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            this.showNotification('Passwords do not match');
+            return;
+        }
+
+        if (password.length < 6) {
+            this.showNotification('Password must be at least 6 characters');
+            return;
+        }
+        
+        this.showLoading(true);
+        
+        try {
+            const data = await authFunctions.signUp(email, password);
+            this.showNotification('Signup successful! Please check your email for verification.');
+            this.showLoginForm();
+        } catch (error) {
+            console.error('Signup error:', error);
+            this.showNotification('Signup failed: ' + error.message);
         } finally {
             this.showLoading(false);
         }
@@ -186,7 +285,24 @@ class EarnzyApp {
         }
     }
 
+    async handleLogout() {
+        try {
+            await authFunctions.signOut();
+            this.currentUser = null;
+            this.userWallet = { balance: 0, earned: 0, withdrawn: 0, referral_code: '' };
+            this.showPage('login-page');
+            this.showNotification('Logged out successfully');
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
+    }
+
     async handleDailyCheckIn() {
+        if (!this.currentUser) {
+            this.showNotification('Please login first');
+            return;
+        }
+
         const coinsEarned = 50;
         
         try {
@@ -222,6 +338,11 @@ class EarnzyApp {
     }
 
     async handleWatchVideo() {
+        if (!this.currentUser) {
+            this.showNotification('Please login first');
+            return;
+        }
+
         const coinsEarned = Math.floor(Math.random() * 11) + 10; // 10-20 coins
         
         try {
@@ -255,6 +376,11 @@ class EarnzyApp {
     }
 
     async handleScratchCard() {
+        if (!this.currentUser) {
+            this.showNotification('Please login first');
+            return;
+        }
+
         const coinsEarned = Math.floor(Math.random() * 46) + 5; // 5-50 coins
         
         try {
@@ -294,7 +420,25 @@ class EarnzyApp {
         this.showNotification('Referral code copied to clipboard!');
     }
 
+    shareReferral() {
+        const referralLink = document.getElementById('referral-link').value;
+        if (navigator.share) {
+            navigator.share({
+                title: 'Join Earnzy and Earn Money',
+                text: 'Use my referral code to get bonus coins!',
+                url: referralLink
+            });
+        } else {
+            this.copyReferralCode();
+        }
+    }
+
     async handleWithdrawal() {
+        if (!this.currentUser) {
+            this.showNotification('Please login first');
+            return;
+        }
+
         const amount = parseInt(document.getElementById('withdraw-amount').value);
         const method = document.getElementById('payment-method').value;
         const account = document.getElementById('account-details').value;
