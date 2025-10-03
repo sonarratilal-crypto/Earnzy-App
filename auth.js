@@ -29,6 +29,22 @@ const authFunctions = {
         }
     },
 
+    // Email signup
+    async signUp(email, password) {
+        try {
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+            });
+            
+            if (error) throw error;
+            return data;
+        } catch (error) {
+            console.error('Sign up error:', error);
+            throw error;
+        }
+    },
+
     // Google login
     async loginWithGoogle() {
         try {
@@ -55,22 +71,6 @@ const authFunctions = {
             return data;
         } catch (error) {
             console.error('Facebook login error:', error);
-            throw error;
-        }
-    },
-
-    // Sign up
-    async signUp(email, password) {
-        try {
-            const { data, error } = await supabase.auth.signUp({
-                email: email,
-                password: password,
-            });
-            
-            if (error) throw error;
-            return data;
-        } catch (error) {
-            console.error('Sign up error:', error);
             throw error;
         }
     },
