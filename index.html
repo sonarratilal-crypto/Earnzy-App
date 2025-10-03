@@ -1,336 +1,105 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earnzy - Earn Money Online</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-coins"></i>
-                    <span>Earnzy</span>
-                </div>
-                <div class="user-actions">
-                    <a href="#" id="notification-icon"><i class="fas fa-bell"></i></a>
-                    <a href="#" id="profile-icon"><i class="fas fa-user"></i></a>
-                </div>
-            </div>
+<!-- Login Page -->
+<div class="page active" id="login-page">
+    <div class="login-container">
+        <div class="login-header">
+            <h2 id="login-title">Welcome to Earnzy</h2>
+            <p>Sign in to start earning</p>
         </div>
-    </header>
+        
+        <!-- Login Form -->
+        <div id="login-form">
+            <div class="form-group">
+                <input type="email" class="form-control" id="login-email" placeholder="Email" value="test@example.com">
+            </div>
+            
+            <div class="form-group">
+                <input type="password" class="form-control" id="login-password" placeholder="Password" value="password123">
+            </div>
+            
+            <button class="btn" style="width: 100%;" id="login-btn">Login</button>
+            
+            <div class="divider">
+                <span>Or continue with</span>
+            </div>
+            
+            <div class="social-login">
+                <button class="social-btn" id="google-login">
+                    <i class="fab fa-google"></i> Google
+                </button>
+                <button class="social-btn" id="facebook-login">
+                    <i class="fab fa-facebook"></i> Facebook
+                </button>
+            </div>
+            
+            <p style="text-align: center;">Don't have an account? <a href="#" id="show-register">Sign up</a></p>
+        </div>
 
-    <!-- Notification -->
-    <div class="notification" id="notification">
-        Welcome to Earnzy! Start earning now.
+        <!-- Signup Form -->
+        <div id="signup-form" style="display: none;">
+            <div class="form-group">
+                <input type="email" class="form-control" id="signup-email" placeholder="Email">
+            </div>
+            
+            <div class="form-group">
+                <input type="password" class="form-control" id="signup-password" placeholder="Password">
+            </div>
+
+            <div class="form-group">
+                <input type="password" class="form-control" id="signup-confirm-password" placeholder="Confirm Password">
+            </div>
+            
+            <button class="btn" style="width: 100%;" id="signup-btn">Create Account</button>
+            
+            <div class="divider">
+                <span>Or continue with</span>
+            </div>
+            
+            <div class="social-login">
+                <button class="social-btn" id="google-signup">
+                    <i class="fab fa-google"></i> Google
+                </button>
+                <button class="social-btn" id="facebook-signup">
+                    <i class="fab fa-facebook"></i> Facebook
+                </button>
+            </div>
+            
+            <p style="text-align: center;">Already have an account? <a href="#" id="show-login">Sign in</a></p>
+        </div>
     </div>
+</div>
 
-    <!-- Main Content -->
-    <div class="container">
-        <!-- Home Page -->
-        <div class="page active" id="home-page">
-            <div class="hero">
-                <h1>Earn Money Online</h1>
-                <p>Watch videos, complete tasks & scratch cards to earn real money!</p>
-                <a href="#" class="btn" id="start-earning">Start Earning Now</a>
+<!-- Profile Page -->
+<div class="page" id="profile-page">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Your Profile</div>
+        </div>
+        
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; color: white; font-size: 2rem;">
+                <i class="fas fa-user"></i>
             </div>
+            <h3 id="profile-name">User</h3>
+            <p id="profile-email">user@example.com</p>
+        </div>
 
-            <div class="wallet-balance">
-                <p>Your Balance</p>
-                <div class="amount" id="wallet-amount">0 Coins</div>
-                <p>= ₹0.00</p>
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-value" id="profile-balance">0</div>
+                <div class="stat-label">Coins</div>
             </div>
-
-            <div class="features-grid">
-                <div class="feature-card" data-page="watch-page">
-                    <div class="feature-icon">
-                        <i class="fas fa-play-circle"></i>
-                    </div>
-                    <h3>Watch & Earn</h3>
-                    <p>10-20 coins per video</p>
-                </div>
-                <div class="feature-card" data-page="tasks-page">
-                    <div class="feature-icon">
-                        <i class="fas fa-tasks"></i>
-                    </div>
-                    <h3>Tasks</h3>
-                    <p>50-5000+ coins</p>
-                </div>
-                <div class="feature-card" data-page="scratch-page">
-                    <div class="feature-icon">
-                        <i class="fas fa-scroll"></i>
-                    </div>
-                    <h3>Scratch Cards</h3>
-                    <p>5-50 coins daily</p>
-                </div>
-                <div class="feature-card" data-page="referral-page">
-                    <div class="feature-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3>Refer & Earn</h3>
-                    <p>500 coins per friend</p>
-                </div>
+            <div class="stat-item">
+                <div class="stat-value" id="profile-earned">0</div>
+                <div class="stat-label">Earned</div>
             </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Daily Check-in</div>
-                    <div class="card-badge">Day 1</div>
-                </div>
-                <p>Check in daily to earn bonus coins!</p>
-                <button class="btn" style="width: 100%; margin-top: 15px;" id="check-in-btn">Check In Today</button>
-            </div>
-
-            <div class="stats-container">
-                <div class="stat-item">
-                    <div class="stat-value" id="total-earned">0</div>
-                    <div class="stat-label">Earned</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="total-withdrawn">0</div>
-                    <div class="stat-label">Withdrawn</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="total-referrals">0</div>
-                    <div class="stat-label">Referrals</div>
-                </div>
+            <div class="stat-item">
+                <div class="stat-value" id="profile-referrals">0</div>
+                <div class="stat-label">Referrals</div>
             </div>
         </div>
 
-        <!-- Watch & Earn Page -->
-        <div class="page" id="watch-page">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Watch & Earn</div>
-                </div>
-                <p>Watch videos to earn coins. You can earn 10-20 coins per video.</p>
-                
-                <div class="task-item">
-                    <div class="task-info">
-                        <h3>Watch Video Ad 1</h3>
-                        <p>30 seconds video</p>
-                    </div>
-                    <div class="task-reward">+10 coins</div>
-                </div>
-                
-                <div class="task-item">
-                    <div class="task-info">
-                        <h3>Watch Video Ad 2</h3>
-                        <p>45 seconds video</p>
-                    </div>
-                    <div class="task-reward">+15 coins</div>
-                </div>
-                
-                <div class="task-item">
-                    <div class="task-info">
-                        <h3>Watch Video Ad 3</h3>
-                        <p>60 seconds video</p>
-                    </div>
-                    <div class="task-reward">+20 coins</div>
-                </div>
-                
-                <button class="btn" style="width: 100%; margin-top: 15px;" id="watch-video-btn">Watch Video & Earn</button>
-            </div>
-        </div>
-
-        <!-- Tasks Page -->
-        <div class="page" id="tasks-page">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Available Tasks</div>
-                </div>
-                
-                <div class="task-item">
-                    <div class="task-info">
-                        <h3>Install App & Open</h3>
-                        <p>Install the recommended app</p>
-                    </div>
-                    <div class="task-reward">+150 coins</div>
-                </div>
-                
-                <div class="task-item">
-                    <div class="task-info">
-                        <h3>Complete Survey</h3>
-                        <p>Share your opinion</p>
-                    </div>
-                    <div class="task-reward">+200 coins</div>
-                </div>
-                
-                <div class="task-item">
-                    <div class="task-info">
-                        <h3>Sign Up Offer</h3>
-                        <p>Register on partner site</p>
-                    </div>
-                    <div class="task-reward">+500 coins</div>
-                </div>
-                
-                <button class="btn" style="width: 100%; margin-top: 15px;" id="view-more-tasks">View More Tasks</button>
-            </div>
-        </div>
-
-        <!-- Scratch Cards Page -->
-        <div class="page" id="scratch-page">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Scratch Cards</div>
-                    <div class="card-badge">3 left today</div>
-                </div>
-                <p>Scratch to reveal your prize! You have 3 scratch cards available today.</p>
-                
-                <div style="display: flex; justify-content: space-around; margin: 20px 0;">
-                    <div class="scratch-card" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
-                        Scratch
-                    </div>
-                    <div class="scratch-card" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
-                        Scratch
-                    </div>
-                    <div class="scratch-card" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
-                        Scratch
-                    </div>
-                </div>
-                
-                <button class="btn" style="width: 100%;" id="scratch-now-btn">Scratch Now</button>
-            </div>
-        </div>
-
-        <!-- Referral Page -->
-        <div class="page" id="referral-page">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Refer & Earn</div>
-                </div>
-                <p>Invite your friends and earn 500 coins for each friend who joins!</p>
-                
-                <div class="form-group" style="margin-top: 20px;">
-                    <label>Your Referral Code</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" class="form-control" id="referral-code" value="EARNZY500" readonly>
-                        <button class="btn" id="copy-referral">Copy</button>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Your Referral Link</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" class="form-control" id="referral-link" value="https://earnzy.com/ref/rizwan123" readonly>
-                        <button class="btn" id="share-referral">Share</button>
-                    </div>
-                </div>
-                
-                <div class="stats-container">
-                    <div class="stat-item">
-                        <div class="stat-value">5</div>
-                        <div class="stat-label">Referred</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">2500</div>
-                        <div class="stat-label">Earned</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Withdraw Page -->
-        <div class="page" id="withdraw-page">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Withdraw Earnings</div>
-                </div>
-                <p>Minimum withdrawal: 10,000 coins (₹100)</p>
-                
-                <div class="form-group">
-                    <label>Withdrawal Amount (coins)</label>
-                    <input type="number" class="form-control" id="withdraw-amount" placeholder="Enter amount">
-                </div>
-                
-                <div class="form-group">
-                    <label>Payment Method</label>
-                    <select class="form-control" id="payment-method">
-                        <option value="paytm">Paytm</option>
-                        <option value="upi">UPI</option>
-                        <option value="paypal">PayPal</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Account Details</label>
-                    <input type="text" class="form-control" id="account-details" placeholder="Enter your account ID">
-                </div>
-                
-                <button class="btn" style="width: 100%;" id="withdraw-now-btn">Withdraw Now</button>
-            </div>
-        </div>
-
-        <!-- Login Page -->
-        <div class="page" id="login-page">
-            <div class="login-container">
-                <div class="login-header">
-                    <h2>Welcome to Earnzy</h2>
-                    <p>Sign in to start earning</p>
-                </div>
-                
-                <div class="form-group">
-                    <input type="email" class="form-control" id="login-email" placeholder="Email">
-                </div>
-                
-                <div class="form-group">
-                    <input type="password" class="form-control" id="login-password" placeholder="Password">
-                </div>
-                
-                <button class="btn" style="width: 100%;" id="login-btn">Login</button>
-                
-                <div class="divider">
-                    <span>Or continue with</span>
-                </div>
-                
-                <div class="social-login">
-                    <button class="social-btn" id="google-login">
-                        <i class="fab fa-google"></i> Google
-                    </button>
-                    <button class="social-btn" id="facebook-login">
-                        <i class="fab fa-facebook"></i> Facebook
-                    </button>
-                </div>
-                
-                <p style="text-align: center;">Don't have an account? <a href="#" id="show-register">Sign up</a></p>
-            </div>
-        </div>
-
-        <!-- Loading Spinner -->
-        <div class="spinner" id="loading-spinner" style="display: none;"></div>
+        <button class="btn" style="width: 100%; background: var(--danger);" id="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
     </div>
-
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <a href="#" class="nav-item active" data-page="home-page">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </a>
-        <a href="#" class="nav-item" data-page="watch-page">
-            <i class="fas fa-play-circle"></i>
-            <span>Watch</span>
-        </a>
-        <a href="#" class="nav-item" data-page="tasks-page">
-            <i class="fas fa-tasks"></i>
-            <span>Tasks</span>
-        </a>
-        <a href="#" class="nav-item" data-page="scratch-page">
-            <i class="fas fa-scroll"></i>
-            <span>Scratch</span>
-        </a>
-        <a href="#" class="nav-item" data-page="withdraw-page">
-            <i class="fas fa-wallet"></i>
-            <span>Withdraw</span>
-        </a>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase.js"></script>
-    <script src="auth.js"></script>
-    <script src="app.js"></script>
-</body>
-</html>
+</div>
